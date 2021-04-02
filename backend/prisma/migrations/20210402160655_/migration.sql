@@ -8,7 +8,7 @@
 DROP TABLE `pixel`;
 
 -- CreateTable
-CREATE TABLE `Pixels` (
+CREATE TABLE `pixels` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `data` JSON,
 
