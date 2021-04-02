@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import { version } from '../../package.json';
 
-import pixel from './pixel';
-// import pixel from 'api/pixel';
+import pixels from './pixels';
 
 export default () => {
-  const api = Router();
+  const api = Router({mergeParams: true});
 
-  api.use('/pixels', pixel);
+  api.use('/pixels', pixels(api));
   
   api.get('/', (req, res) => {
     res.json(version);

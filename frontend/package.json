@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@walletconnect/client": "^1.4.0",
     "@walletconnect/qrcode-modal": "^1.4.0",
+    "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
