@@ -3,7 +3,6 @@ import {Engine, Render, Runner, World, Bodies} from 'matter-js'
 import Button from 'components/Button'
 import Input from 'components/Input'
 import {getPixel} from 'api/Pixel'
-import dummyPixel from 'utils/dummyPixel'
 
 const Home = () => {
   const containerRef = createRef(null)
@@ -16,32 +15,10 @@ const Home = () => {
   const containerWidth = pixelSize * colCount
   const containerHeight = pixelSize * rowCount
 
-  const engine = Engine.create()
-  const { world } = engine
-  const runner = Runner.create()
-  const wall = [
-    Bodies.rectangle(
-      containerWidth / 2, -2,
-      containerWidth, 4,
-      { isStatic: true }),
-    Bodies.rectangle(
-      containerWidth + 2, containerHeight / 2,
-      4, containerHeight,
-      { isStatic: true }
-    ),
-    Bodies.rectangle(
-      -2, containerHeight / 2,
-      4, containerHeight,
-      { isStatic: true }),
-    Bodies.rectangle(
-      containerWidth / 2, containerHeight + 2,
-      containerWidth, 4,
-      { isStatic: true }
-    ),
-  ];
-
   const [id, setId] = useState('')
-  const [pixel, setPixel] = useState({data: dummyPixel})
+  const [pixel, setPixel] = useState({
+    data: []
+  })
 
   const drawGrid = (w, h, s, canvas) => {
     const ctx = canvas.getContext('2d')
@@ -70,14 +47,38 @@ const Home = () => {
         { render: { fillStyle: el.fill } }
       )
       body.restitution = Math.random() * 0.1
-
+      
       return body
     })
   }
   
+  const runner = Runner.create()
+  const engine = Engine.create()
+  const { world } = engine
+  const wall = [
+    Bodies.rectangle(
+      containerWidth / 2, -2,
+      containerWidth, 4,
+      { isStatic: true }),
+    Bodies.rectangle(
+      containerWidth + 2, containerHeight / 2,
+      4, containerHeight,
+      { isStatic: true }
+    ),
+    Bodies.rectangle(
+      -2, containerHeight / 2,
+      4, containerHeight,
+      { isStatic: true }),
+    Bodies.rectangle(
+      containerWidth / 2, containerHeight + 2,
+      containerWidth, 4,
+      { isStatic: true }
+    ),
+  ];
+  
   useEffect(() => {
     drawGrid(containerWidth, containerHeight, pixelSize, gridRef.current)
-
+    
     const render = Render.create({
       element: containerRef.current,
       engine,
@@ -85,12 +86,13 @@ const Home = () => {
       options: {
         width: containerWidth,
         height: containerHeight,
-        background: 'rgba(255, 0, 0, 0.3)',
+        background: 'rgba(224, 231, 255, 0.8)',
         wireframes: false,
-        // showAngleIndicator: true,
-        // showBroadphase: true
       },
     })
+
+    World.add(world, wall)
+    World.add(world, getRectangles(pixel.data))
 
     Render.run(render)
     
@@ -98,8 +100,6 @@ const Home = () => {
       min: { x: 0, y: 0 },
       max: { x: containerWidth, y: containerHeight }
     })
-    
-    // init()
     
     return {
       engine,
@@ -111,7 +111,7 @@ const Home = () => {
         Runner.stop(runner)
       }
     }
-  }, [])
+  }, [pixel])
   
   const init = () => {
     World.clear(world)
@@ -120,15 +120,10 @@ const Home = () => {
   }
 
   const handleLoadPixel = async (e) => {
-    // const {data} = await getPixel(id)
-    Runner.stop(runner, engine)
-    
-    init()
     e.preventDefault()
+    const {data} = await getPixel(id)
+    if(data) setPixel(data)
   }
-  
-  console.log(pixel)
-  console.log(pixel === '')
   
   const handleFall = () => {
     Runner.run(runner, engine)

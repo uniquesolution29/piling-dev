@@ -58,6 +58,7 @@ module.exports = {
     'consistent-return': 0,
     'no-mixed-operators': 0,
     'prefer-const': 1,
+    "object-shorthand": 0,
     
     'jsx-a11y/click-events-have-key-events': 0,
     'jsx-a11y/no-static-element-interactions': 0,

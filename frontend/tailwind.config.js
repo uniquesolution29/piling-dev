@@ -6,10 +6,10 @@ module.exports = {
   theme: {
     container: {
       screens: {
-         sm: "100%",
-         md: "100%",
-         lg: "1024px",
-         xl: "1300px"
+        sm: "100%",
+        md: "100%",
+        lg: "100%",
+        xl: "1300px"
       }
     },
     colors: {
@@ -93,6 +93,25 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-filters'),
-    require('@tailwindcss/aspect-ratio')
+    require('@tailwindcss/aspect-ratio'),
+    ({ addComponents }) => {
+      addComponents({
+        '.pixel-container': {
+          maxWidth: '100%',
+          '@screen sm': {
+            maxWidth: '100%',
+          },
+          '@screen md': {
+            maxWidth: '720px',
+          },
+          '@screen lg': {
+            maxWidth: '720px',
+          },
+          '@screen xl': {
+            maxWidth: '720px',
+          },
+        }
+      })
+    }
   ],
 }
